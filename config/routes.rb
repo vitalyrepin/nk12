@@ -1,11 +1,14 @@
 Nkapp::Application.routes.draw do
+  get "verify/index"
+
   #get \"users\/show\"
 
   root :to => "home#index"
 
   devise_for :users
   resources :users, :only => :show
-
+  resources :home
+  resources :verify
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

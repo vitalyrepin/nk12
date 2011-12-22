@@ -24,8 +24,9 @@ namespace :grab do
         
       end
     end
-    
-    Parallel.each(Commission.all,:in_processes=>4){|commission| get_children(commission,commission.url)}
+    # commission = Commission.first
+    # get_children(commission,commission.url)
+    Parallel.each(Commission.all,:in_processes=>5){|commission| get_children(commission,commission.url)}
     
   end
   
@@ -36,9 +37,10 @@ namespace :grab do
 
       agent.search("select option").each do |option|
         if option['value']
-          child = parent_commission.children.create(:name => option.content)
+          name = option.content.gsub(/^\d+ /,'')
+          child = parent_commission.children.create(:name => name, :url => option['value'], :is_uik => name.include?("УИК"))
           #move node to parent_commission
-          print "Taken: #{option.content}\n"
+          print "Taken: #{name}\n"
 
           get_children(child,option['value'])
         end

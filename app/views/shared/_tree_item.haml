@@ -1,6 +1,47 @@
 - node.children.each do |child|
-  = child.name
-  %br
-  = render :partial => "shared/tree_item", :locals => {:node => child}
+
+  - if (child.is_childless?)
+    %div.voting_table
+      %h5= child.name
+      .item_holder
+        .item
+          Справ. Россия
+        .value
+          = child.sr
+      .item_holder
+        .item
+          ЛДПР
+        .value    
+          = child.ldpr
+      .item_holder
+        .item
+          Патриоты России
+        .value    
+          = child.pr
+      .item_holder
+        .item
+          КПРФ
+        .value              
+          = child.kprf
+      .item_holder
+        .item
+          Яблоко
+        .value    
+          = child.yabloko
+      .item_holder
+        .item
+          Единая Россия
+        .value    
+          = child.er
+      .item_holder
+        .item
+          Правое дело
+        .value    
+          = child.pd
+  - else
+    %div.tree-node-holder  
+      %h3
+        = child.name
+      = render :partial => "shared/tree_item", :locals => {:node => child}
 
 

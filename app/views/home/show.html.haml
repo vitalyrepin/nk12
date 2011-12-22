@@ -1,0 +1,7 @@
+%h1  
+  = @commission.name
+- @commission.children.each do |child|
+  %div.tree-node-holder
+    %h2
+      = child.name
+    = render :partial => "shared/tree_item", :locals => {:node => child}

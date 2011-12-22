@@ -1,8 +1,7 @@
 - @commissions.each do |commission|
-  %h2  
-    = commission.name
-    - commission.children.each do |child|
-      %h4
-        = child.name
+  %h4
+    = link_to "#{commission.name}", :controller => "home", :action => "show", :id => commission.id  
+    
+    
 
-      = render :partial => "shared/tree_item", :locals => {:node => child}
+      
