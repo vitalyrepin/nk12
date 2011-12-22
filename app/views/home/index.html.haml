@@ -1,3 +1,8 @@
-%h3 Home
-- @users.each do |user|
-  %p User: #{link_to user.name, user}
+- @commissions.each do |commission|
+  %h2  
+    = commission.name
+    - commission.children.each do |child|
+      %h4
+        = child.name
+
+      = render :partial => "shared/tree_item", :locals => {:node => child}

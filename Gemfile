@@ -2,7 +2,8 @@ require 'rbconfig'
 HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
 gem 'rails', '3.1.1'
-gem 'sqlite3'
+gem 'mysql2'
+gem 'ancestry'
 group :assets do
   gem 'sass-rails',   '~> 3.1.4'
   gem 'coffee-rails', '~> 3.1.1'
@@ -41,3 +42,6 @@ gem "guard-cucumber", ">= 0.6.1", :group => :development
 gem "devise", ">= 1.5.0"
 gem "twitter-bootstrap-rails"
 gem "rails-footnotes", ">= 3.7", :group => :development
+
+#Гем для паралельного запуска граббера
+gem "parallel"

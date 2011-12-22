@@ -1,0 +1,6 @@
+- node.children.each do |child|
+  = child.name
+  %br
+  = render :partial => "shared/tree_item", :locals => {:node => child}
+
+

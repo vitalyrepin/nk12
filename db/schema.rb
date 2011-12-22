@@ -11,7 +11,42 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111221174027) do
+ActiveRecord::Schema.define(:version => 20111221204624) do
+
+  create_table "commissions", :force => true do |t|
+    t.string   "name"
+    t.string   "url"
+    t.integer  "poll"
+    t.integer  "received_by_commission"
+    t.integer  "voted_early"
+    t.integer  "voted_in"
+    t.integer  "voted_out"
+    t.integer  "canceled_ballots"
+    t.integer  "mobile_ballots"
+    t.integer  "stationary_ballots"
+    t.integer  "invalid_ballots"
+    t.integer  "valid_ballots"
+    t.integer  "absentee_ballots_all"
+    t.integer  "absentee_ballots_given"
+    t.integer  "absentee_ballots_voted"
+    t.integer  "unused_absentee_ballots"
+    t.integer  "absentee_territorial"
+    t.integer  "lost_absentee_ballots"
+    t.integer  "ballots_not_taken"
+    t.integer  "sr"
+    t.integer  "ldpr"
+    t.integer  "pr"
+    t.integer  "kprf"
+    t.integer  "yabloko"
+    t.integer  "er"
+    t.integer  "pd"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "parent_id"
+    t.string   "ancestry"
+  end
+
+  add_index "commissions", ["ancestry"], :name => "index_commissions_on_ancestry"
 
   create_table "users", :force => true do |t|
     t.string   "email",                                 :default => "", :null => false
