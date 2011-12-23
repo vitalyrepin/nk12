@@ -1,12 +1,9 @@
-
-- @result.each do |one|
-  %br
-  = one[:name]
-  %b 
-    = one[:poll_from_cik]  
-  - if one[:poll]
-    минус
-    %b 
-      = one[:poll]
-    равно
-    = "#{one[:poll_from_cik].to_i - one[:poll].to_i}"
+%table
+  - @result.each do |one|
+    %tr
+      %td
+        = one[:name]
+      %td  
+        = one[:poll]
+      %td  
+        = one[:summed_poll]

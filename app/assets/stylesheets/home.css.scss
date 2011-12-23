@@ -1,7 +1,77 @@
 // Place all the styles related to the home controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-.voting_table{
+.navigation-holder{
+	position: relative;
+	.show-navigation{
+		position: relative;
+		z-index: 15;
+		font-size:1.4em;
+		color:#980905;
+		border-bottom:1px dashed #980905;
+		text-decoration:none;
+	}
+	.tree-navigation{
+		background:#fff;
+		width: 27em;
+		display: none;
+		border-radius: 1em;
+		-webkit-border-radius: 1em;
+		-moz-border-radius: 1em;
+		-webkit-box-shadow: 0.25em 0.25em 1em rgba(0, 0, 0, 0.25);
+		-moz-box-shadow: rgba(0, 0, 0, 0.25) 0.25em 0.25em 1em;
+
+		padding: 1.5em 2em;
+		position: absolute;
+		z-index: 10;
+		top: -0.5em;
+		left: -1em;
+		padding-top: 2em;
+		h4{
+			border-bottom:1px solid #eee;
+		}
+		ul{
+			padding:0;
+			margin:0;
+			li{
+				
+				list-style: none;
+			}
+		}
+	}
+	
+}
+.filter{
+
+}
+.filter-popover{
+	cursor:pointer;
+}
+.filter-item{
+	ul{		
+		margin:0;
+		display:inline;
+		li{
+			display:inline;
+			margin-right:5px;
+			a{
+				text-decoration:none;
+				cursor:pointer;
+				border-radius:10px;
+				background:#eee;
+				padding:3px 6px;
+				
+				&.active{					
+					background:#0064CD;
+					color:#fff;
+				}
+			}
+		}
+	}		
+}
+
+
+.voting-table{
 	width:150px;
 	height:170px;
 	margin:5px;
@@ -12,12 +82,14 @@
 	color: #444;
 	overflow: auto;
 	-webkit-box-shadow: rgba(0, 0, 0, 0.07) 0 1px 2px inset;
-
 	float:left;
-	
-	table{
-		border:0;
+	@for $i from 1 through 10 {
+	  .attendance-#{$i} { color: darken(#fff,$i*10); }
 	}
+	h5{
+		text-shadow: 0 1px 0 rgba(255, 255, 255, 1.0);
+	}
+
 	.item_holder{
 		.item{
 			width:110px;
@@ -34,4 +106,5 @@
 	margin-left:10px;
 	clear:both;
 	display:block;
+	border:1px solid red;
 }

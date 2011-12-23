@@ -27,3 +27,6 @@ header nav ul li {
   border: solid 1px #C66;
 }
 
+.hidden{
+	display:none;
+}

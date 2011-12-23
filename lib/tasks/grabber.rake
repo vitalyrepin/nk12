@@ -24,8 +24,7 @@ namespace :grab do
         
       end
     end
-    # commission = Commission.first
-    # get_children(commission,commission.url)
+
     Parallel.each(Commission.all,:in_processes=>5){|commission| get_children(commission,commission.url)}
     
   end
