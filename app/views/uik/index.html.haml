@@ -1,0 +1,11 @@
+%h1 Обсуждаемые УИК-и
+- @uiks.each do |uik|
+  %div
+    %h4
+      - uik.ancestors.each do |ancestor|
+        = ancestor.name
+        &rarr;
+      = link_to uik.name, uik_path(uik)
+    - uik.comments.each do |comment|
+      = comment.fio
+      = comment.body

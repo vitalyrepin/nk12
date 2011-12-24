@@ -53,7 +53,7 @@
             %a.open-dialog.ico-doc_lines_stright.sprite-link{"data-id"=>child.id}
             %a.open-dialog.ico-spechbubble_sq_line.sprite-link{"data-id"=>child.id}              
           %h5
-            = child.name
+            = link_to child.name, uik_path(child)
           .item_holder
             .item
               Явка

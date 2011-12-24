@@ -1,0 +1,57 @@
+%h2 
+  - @uik.ancestors.each_with_index do |ancestor,index|
+    -if index == 0
+      = link_to ancestor.name, home_path(ancestor)      
+    -else
+      = link_to ancestor.name, home_path(ancestor.root, :anchor => ancestor.id)      
+    &rarr;
+  = @uik.name
+%div.uik-voting-table
+  .item_holder
+    .item
+      Явка
+    .value{:class => "attendance-#{@uik.pct("poll")/10.to_i}"}
+      = @uik.valid_ballots
+      %span.help-inline= " #{@uik.pct("poll")} %"
+  .item_holder
+    .item
+      Справ. Россия
+    .value
+      = @uik.sr    
+      %span.help-inline= "#{@uik.pct("sr")}%"     
+  .item_holder
+    .item
+      ЛДПР
+    .value    
+      = @uik.ldpr         
+      %span.help-inline= "#{@uik.pct("ldpr")}%"           
+  .item_holder
+    .item
+      Патриоты России
+    .value    
+      = @uik.pr
+      %span.help-inline= "#{@uik.pct("pr")}%"     
+  .item_holder
+    .item
+      КПРФ
+    .value              
+      = @uik.kprf
+      %span.help-inline= "#{@uik.pct("kprf")}%"           
+  .item_holder
+    .item
+      Яблоко
+    .value    
+      = @uik.yabloko
+      %span.help-inline= "#{@uik.pct("yabloko")}%"           
+  .item_holder
+    .item
+      Единая Россия
+    .value    
+      = @uik.er
+      %span.help-inline= "#{@uik.pct("er")}%"           
+  .item_holder
+    .item
+      Правое дело
+    .value    
+      = @uik.pd
+      %span.help-inline= "#{@uik.pct("pd")}%"           

@@ -1,0 +1,15 @@
+// Place all the styles related to the uik controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.uik-voting-table{
+	.item_holder{
+		.item{
+			width:200px;
+			float:left;
+		}
+		.value{
+			font-weight:800;
+		}
+		clear:both;
+	}
+}

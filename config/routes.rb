@@ -1,4 +1,6 @@
 Nkapp::Application.routes.draw do
+
+  resources :uik
   resources :comments
 
   get "verify/index"
