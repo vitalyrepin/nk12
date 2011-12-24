@@ -12,7 +12,7 @@ set :deploy_to, "/home/nk12/data/www/#{application}"
 
 # SVN and Auth
 set :scm, :git
-set :repository, "git@github.com:oshlykov/Elections-2011---4-dec.git"
+set :repository, "git@github.com:jesteracer/nk12.git"
 set :branch, "master"
 set :deploy_via, :remote_cache
 
