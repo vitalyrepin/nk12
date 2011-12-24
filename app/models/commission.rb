@@ -1,6 +1,7 @@
 class Commission < ActiveRecord::Base
   has_ancestry
-
+  has_many :comments
+  
   def pct(target)
     if self.send(target).to_i > 0
       if target == "poll"

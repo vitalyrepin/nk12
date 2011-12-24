@@ -1,9 +1,49 @@
 %div.navigation-holder
-  = link_to "ЦИК", root_path
-  &rarr;
   %a.show-navigation{:href=>"#"}
     = @commission.name
+  = link_to "ЦИК", root_path  
   %div.tree-navigation
     %br
 - @commission.children.each do |child|
   = render :partial => "shared/tree_item", :locals => {:node => child}
+  
+%div#add-report-modal.modal.hide.fade
+  .modal-header
+    %a.close{:href => "#"} ×
+    %h3 Добавить протокол
+  .modal-body
+    %p ы
+  .modal-footer
+    %a.btn.primary{:href => "#"} Добавить протокол
+
+%div#add-comment-modal.modal.hide.fade
+  .modal-header
+    %a.close{:href => "#"} ×
+    %h3 Добавить комментарий
+  .modal-body
+    %form#add-comment-form.form-stacked.ajax{:action => "/comments", :method => "POST"}
+      .clearfix
+        %label{:for => "fio"} Вас зовут
+        .input
+          %input#comment.span8{:type => "text",:name => "fio", :rows => "5"}
+
+      .clearfix
+        %label{:for => "email"} Email
+        .input
+          %input#comment.span8{:type => "text",:name => "email", :rows => "5"}
+
+      .clearfix
+        %label{:for => "comment"} Ваш комментарий
+        .input
+          %textarea#comment.span8{:name => "body", :rows => "5"}
+
+      .clearfix
+        %label{:for => "stackedSelect"} Нарушения?
+        .input
+          %select#stackedSelect{:name => "violation"}
+            %option{:value => "false"} не было
+            %option{:value => "true"} были
+            
+        %input{:type => "hidden",:name => "commission_id", :value=>"blank"}      
+  .modal-footer
+    %a.btn.primary.add-comment Добавить комментарий        

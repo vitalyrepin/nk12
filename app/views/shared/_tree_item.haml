@@ -1,7 +1,38 @@
 - if node.is_uik == false
   %div.tree-node-holder{id: node.id}  
-    %h3.node-name{"id"=>node.id,"data-depth"=>node.depth}
-      = node.name
+    %div.node-name
+      %div.name
+        %h3{"id"=>node.id,"data-depth"=>node.depth}
+          = node.name
+          %a.ico-link.sprite-link{:href=>node.url}
+          
+            
+      %div.root-voting-table
+        %ul
+          %li
+            Явка:
+            %b= "#{node.pct("poll")}%"            
+          %li
+            Спр. Россия:
+            %b= "#{node.pct("sr")}%"
+          %li
+            ЛДПР:
+            %b= "#{node.pct("ldpr")}%"
+          %li  
+            Патр. России:
+            %b= "#{node.pct("pr")}%"
+          %li  
+            КПРФ:
+            %b= "#{node.pct("kprf")}%"
+          %li  
+            Яблоко:
+            %b= "#{node.pct("yabloko")}%"
+          %li  
+            Ед. Россия:
+            %b= "#{node.pct("er")}%"
+          %li  
+            Правое дело
+            %b= "#{node.pct("pd")}%"
 
     %div.filter
       Фильтровать по:
@@ -18,12 +49,16 @@
     - node.children.each do |child|
       - if (child.is_uik == true) 
         %div.voting-table{filter_params(child)}
+          %div.controllers
+            %a.open-dialog.ico-doc_lines_stright.sprite-link{"data-id"=>child.id}
+            %a.open-dialog.ico-spechbubble_sq_line.sprite-link{"data-id"=>child.id}              
           %h5
             = child.name
-            -if child.poll and child.valid_ballots
-              %span.help-inline{:class => "attendance-#{child.pct("poll")/10.to_i}"}
-                &rarr;
-                = " #{child.pct("poll")} %"
+          .item_holder
+            .item
+              Явка
+            .value{:class => "attendance-#{child.pct("poll")/10.to_i}"}
+              = " #{child.pct("poll")} %"
           .item_holder
             .item
               Справ. Россия

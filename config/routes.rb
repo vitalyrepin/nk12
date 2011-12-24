@@ -1,4 +1,6 @@
 Nkapp::Application.routes.draw do
+  resources :comments
+
   get "verify/index"
 
   #get \"users\/show\"

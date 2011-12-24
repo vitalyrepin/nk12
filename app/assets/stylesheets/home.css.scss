@@ -2,22 +2,32 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 .tree-root{
-	height:250px;
-	font-size: 12px;
 
+	margin:5px;
+	padding:5px 10px;
+	font-size: 12px;
+	background:#F0F0F0;
 
 	color: #444;
 	overflow: auto;
 	float:left;
-	.item_holder{
-		.item{
-			width:110px;
-			float:left;
-		}
-		.value{
-			font-weight:800;
-		}
-		clear:both;
+	
+	color: #333;
+	opacity: 0.7;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background-color: #EAEAEA;
+	-webkit-transition: 0.10s ease-in;
+	-moz-transition: 0.10s ease-in;
+	
+	&:hover{
+		opacity: 1;	
+	}
+	a{
+		color :#444;
+		text-decoration:none;
+		border-bottom: 1px dotted #CCC;
 	}
 }
 .navigation-holder{
@@ -61,7 +71,7 @@
 	
 }
 .filter{
-
+	clear:both;
 }
 .filter-popover{
 	cursor:pointer;
@@ -88,8 +98,31 @@
 		}
 	}		
 }
+.node-name{
+	.name{
+		h3{
 
+		}
+		float:left;
+	}
+	.root-voting-table{
+		opacity:0;
+		ul{
+			padding-top:11px;			
+			li{
+				font-size:11px;
+				border:1px solid #eee;
+				background:#eee;
+				color:#3FA757;
+				padding:2px 4px;
+				display:inline;
+				margin-right:2px;
+				border-radius:10px;
+			}
+		}
+	}
 
+}
 .voting-table{
 	width:150px;
 	height:170px;
@@ -102,13 +135,20 @@
 	overflow: auto;
 	-webkit-box-shadow: rgba(0, 0, 0, 0.07) 0 1px 2px inset;
 	float:left;
+	position:relative;
 	@for $i from 1 through 10 {
 	  .attendance-#{$i} { color: darken(#fff,$i*10); }
 	}
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 1.0);
 	h5{
-		text-shadow: 0 1px 0 rgba(255, 255, 255, 1.0);
+		padding:0;
+		margin-top:-10px;		
 	}
-
+	.controllers{
+		position:absolute;
+		z-index:5;
+		right:5px;
+	}
 	.item_holder{
 		.item{
 			width:110px;

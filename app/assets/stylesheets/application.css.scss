@@ -6,6 +6,9 @@
  *= require twitter/bootstrap
  *= require_tree . 
 */
+body{
+	background :image_url("background.png");
+}
 header nav ul {
   list-style: none;
   margin: 0 0 2em;
