@@ -2,6 +2,7 @@
   %div.tree-node-holder{id: node.id}  
     %h3.node-name{"id"=>node.id,"data-depth"=>node.depth}
       = node.name
+
     %div.filter
       Фильтровать по:
       %a{"data-placement"=>"right", "rel"=>"popover", "title"=>"меньше", "class"=>"filter-popover"}
@@ -13,53 +14,53 @@
               %li
                 %a{"data-arg" => (i+1)*20,"data-receiver_id" => node.id, "data-filter" =>"attendance"}
                   ="#{(i+1)*20} %"
-  
+                  
     - node.children.each do |child|
-      - if (child.is_uik == true)
-        - if child.poll 
-          %div.voting-table{filter_params(child)}
-            %h5
-              = child.name
-              -if child.poll and child.valid_ballots
-                %span.help-inline{:class => "attendance-#{child.pct("poll")/10.to_i}"}
-                  &rarr;
-                  = " #{child.pct("poll")} %"
-            .item_holder
-              .item
-                Справ. Россия
-              .value
-                = child.sr         
-            .item_holder
-              .item
-                ЛДПР
-              .value    
-                = child.ldpr         
-            .item_holder
-              .item
-                Патриоты России
-              .value    
-                = child.pr
-            .item_holder
-              .item
-                КПРФ
-              .value              
-                = child.kprf
-            .item_holder
-              .item
-                Яблоко
-              .value    
-                = child.yabloko
-            .item_holder
-              .item
-                Единая Россия
-              .value    
-                = child.er
-            .item_holder
-              .item
-                Правое дело
-              .value    
-                = child.pd
+      - if (child.is_uik == true) 
+        %div.voting-table{filter_params(child)}
+          %h5
+            = child.name
+            -if child.poll and child.valid_ballots
+              %span.help-inline{:class => "attendance-#{child.pct("poll")/10.to_i}"}
+                &rarr;
+                = " #{child.pct("poll")} %"
+          .item_holder
+            .item
+              Справ. Россия
+            .value
+              = child.sr         
+          .item_holder
+            .item
+              ЛДПР
+            .value    
+              = child.ldpr         
+          .item_holder
+            .item
+              Патриоты России
+            .value    
+              = child.pr
+          .item_holder
+            .item
+              КПРФ
+            .value              
+              = child.kprf
+          .item_holder
+            .item
+              Яблоко
+            .value    
+              = child.yabloko
+          .item_holder
+            .item
+              Единая Россия
+            .value    
+              = child.er
+          .item_holder
+            .item
+              Правое дело
+            .value    
+              = child.pd
       - else
+
         = render :partial => "shared/tree_item", :locals => {:node => child}
 
 

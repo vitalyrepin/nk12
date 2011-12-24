@@ -1,6 +1,49 @@
-- @commissions.each do |commission|
-  %h4
-    = link_to "#{commission.name}", :controller => "home", :action => "show", :id => commission.id  
+%div.row
+  %div.span-one-third
+    .input
+      %input#go-to.xlarge{:name => "search", :size => "30", :type => "text"}
+
+    
+%div.row
+  - @commissions.each do |commission|
+    %div.tree-root.span4
+      %h4
+        = link_to "#{commission.name}", :controller => "home", :action => "show", :id => commission.id  
+      .item_holder
+        .item
+          Справ. Россия
+        .value
+          = commission.sr         
+      .item_holder
+        .item
+          ЛДПР
+        .value    
+          = commission.ldpr         
+      .item_holder
+        .item
+          Патриоты России
+        .value    
+          = commission.pr
+      .item_holder
+        .item
+          КПРФ
+        .value              
+          = commission.kprf
+      .item_holder
+        .item
+          Яблоко
+        .value    
+          = commission.yabloko
+      .item_holder
+        .item
+          Единая Россия
+        .value    
+          = commission.er
+      .item_holder
+        .item
+          Правое дело
+        .value    
+          = commission.pd  
     
     
 

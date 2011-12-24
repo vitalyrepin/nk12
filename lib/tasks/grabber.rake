@@ -8,10 +8,12 @@ namespace :grab do
   end
 
   desc "Grab all the commissions out there from 4-dec elections"
-  task :do => :environment do
-        
+  task :do => :environment do        
     Rake::Task['grab:clean_up'].invoke
     
+    beginning_time = Time.now
+    
+    require 'net/http'
     require 'nokogiri'
     require 'open-uri'
     #Собираем то что идет после ЦИК-а (республики/области)
@@ -24,15 +26,22 @@ namespace :grab do
         
       end
     end
-
-    Parallel.each(Commission.all, :in_threads => 18){|commission| get_children(commission,commission.url)}
+    Parallel.each(Commission.all, :in_threads => 18){|commission| get_children(commission,commission.url)}    
     
+    end_time = Time.now
+    print "\nTime elapsed #{(end_time - beginning_time)*1000} milliseconds\n"
+  end  
+  
+  def url_normalize(url)
+    host = url.match(".+\:\/\/([^\/]+)")[1]
+    path = url.partition(host)[2] || "/"
+    return Net::HTTP.get(host, path)
   end
   
   def get_children(parent_commission,url)
     #идем по урл, забираем html селект или переходим на сайт субъекта     
     begin
-      agent = Nokogiri::HTML(open(url.gsub(/[_]/, '-')), nil, 'Windows-1251')
+      agent = Nokogiri::HTML(url_normalize(url), nil, 'Windows-1251')
 
       agent.search("select option").each do |option|
         if option['value']
@@ -60,8 +69,8 @@ namespace :grab do
     agent.search("a").search("a").each do |href|
       if (href.content.to_str == "Результаты выборов")
           begin
-            url = href['href'].gsub(/[_]/, '-')
-            agent = Nokogiri::HTML(open(url), nil, 'Windows-1251')          
+
+            agent = Nokogiri::HTML(url_normalize(href['href']), nil, 'Windows-1251')          
             voting_table = Hash.new
             agent.search("table").each do |table|
               table.search("tr").each do |row|

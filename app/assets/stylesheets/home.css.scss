@@ -1,6 +1,25 @@
 // Place all the styles related to the home controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.tree-root{
+	height:250px;
+	font-size: 12px;
+
+
+	color: #444;
+	overflow: auto;
+	float:left;
+	.item_holder{
+		.item{
+			width:110px;
+			float:left;
+		}
+		.value{
+			font-weight:800;
+		}
+		clear:both;
+	}
+}
 .navigation-holder{
 	position: relative;
 	.show-navigation{

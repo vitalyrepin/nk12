@@ -18,6 +18,15 @@ $ ->
 			$(this).data('clicked',true)
 
 $ ->
+	$("#go-to").change ->
+		typed = $(this).val()
+		if typed.length > 2
+		  $(".tree-root").fadeOut()
+		else
+		  $(".tree-root").fadeIn()
+		$("h4:contains('"+typed+"')").parents('.tree-root').fadeIn();
+
+$ ->
   navigation_list = $("<ul></ul>").attr(
     class: "navigation-list"
   )
