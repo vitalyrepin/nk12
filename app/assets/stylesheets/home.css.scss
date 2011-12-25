@@ -22,12 +22,13 @@
 	-moz-transition: 0.10s ease-in;
 	
 	&:hover{
+		background :#ccc;
 		opacity: 1;	
 	}
 	a{
 		color :#444;
 		text-decoration:none;
-		border-bottom: 1px dotted #CCC;
+		border-bottom: 1px dashed #444;
 	}
 }
 .navigation-holder{
