@@ -45,3 +45,5 @@ gem "rails-footnotes", ">= 3.7", :group => :development
 
 #Гем для паралельного запуска граббера
 gem "parallel"
+
+gem 'yaml_db', :git => 'git://github.com/ludicast/yaml_db.git'

@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/ludicast/yaml_db.git
+  revision: 82529a175ca4bccf6543a214d9a53cdffc21e523
+  specs:
+    yaml_db (0.2.2)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -242,3 +248,4 @@ DEPENDENCIES
   sass-rails (~> 3.1.4)
   twitter-bootstrap-rails
   uglifier (>= 1.0.3)
+  yaml_db!
