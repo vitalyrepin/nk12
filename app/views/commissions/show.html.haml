@@ -1,0 +1,14 @@
+- @commission.children.each do |child|
+  %div.voting-table
+    %div.controllers
+      %a.ico-doc_lines_stright.sprite-link{"data-id"=>child.id, :href=>new_commission_protocol_path(child)}
+      %a.ico-spechbubble_sq_line.sprite-link{"data-id"=>child.id}
+    %h5
+      = child.name    
+    - child.votings.each do |vote|
+      - if vote.voting_dictionary.main_role?
+        .item_holder
+          .item
+            = vote.voting_dictionary.name
+          .value
+            = vote.votes

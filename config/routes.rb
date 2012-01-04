@@ -1,8 +1,12 @@
 Nkapp::Application.routes.draw do
 
-  resources :uik
   resources :comments
+  
+  resources :commissions do
+    resources :protocols
+  end
 
+  resources :pictures, :only => [:index, :create]
   get "verify/index"
 
   #get \"users\/show\"

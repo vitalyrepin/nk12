@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111224192854) do
+ActiveRecord::Schema.define(:version => 20111230194222) do
 
   create_table "comments", :force => true do |t|
     t.string   "body"
@@ -26,6 +26,35 @@ ActiveRecord::Schema.define(:version => 20111224192854) do
   create_table "commissions", :force => true do |t|
     t.string   "name"
     t.string   "url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "parent_id"
+    t.string   "ancestry"
+    t.boolean  "is_uik",           :default => false
+    t.integer  "election_id"
+    t.boolean  "uik_holder",       :default => false
+    t.string   "voting_table_url"
+    t.boolean  "votes_taken"
+  end
+
+  add_index "commissions", ["ancestry"], :name => "index_commissions_on_ancestry"
+
+  create_table "elections", :force => true do |t|
+    t.string   "name"
+    t.string   "url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "voting_labels"
+  end
+
+  create_table "pictures", :force => true do |t|
+    t.string   "image"
+    t.integer  "protocol_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "protocols", :force => true do |t|
     t.integer  "poll"
     t.integer  "received_by_commission"
     t.integer  "voted_early"
@@ -50,14 +79,10 @@ ActiveRecord::Schema.define(:version => 20111224192854) do
     t.integer  "yabloko"
     t.integer  "er"
     t.integer  "pd"
+    t.integer  "commission_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "parent_id"
-    t.string   "ancestry"
-    t.boolean  "is_uik",                  :default => false
   end
-
-  add_index "commissions", ["ancestry"], :name => "index_commissions_on_ancestry"
 
   create_table "users", :force => true do |t|
     t.string   "email",                                 :default => "", :null => false
@@ -77,5 +102,26 @@ ActiveRecord::Schema.define(:version => 20111224192854) do
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+
+  create_table "voting_dictionaries", :force => true do |t|
+    t.string   "name"
+    t.string   "en_name"
+    t.integer  "election_id"
+    t.integer  "source_identifier"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "main_role",         :default => false
+  end
+
+  create_table "votings", :force => true do |t|
+    t.integer  "commission_id"
+    t.integer  "votes"
+    t.integer  "voting_dictionary_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "votings", ["commission_id"], :name => "index_votings_on_commission_id"
+  add_index "votings", ["voting_dictionary_id"], :name => "index_votings_on_voting_dictionary_id"
 
 end

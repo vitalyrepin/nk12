@@ -44,7 +44,14 @@ gem "devise", ">= 1.5.0"
 gem "twitter-bootstrap-rails"
 gem "rails-footnotes", ">= 3.7", :group => :development
 
+#Формы
+gem "simple_form", :git => 'git://github.com/plataformatec/simple_form.git'
+
 #Гем для паралельного запуска граббера
 gem "parallel"
 
 gem 'yaml_db', :git => 'git://github.com/ludicast/yaml_db.git'
+
+#Uploads
+gem 'carrierwave'
+gem 'mini_magick'
