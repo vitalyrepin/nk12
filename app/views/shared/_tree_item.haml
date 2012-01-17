@@ -50,10 +50,11 @@
       - if (child.is_uik == true) 
         %div.voting-table{filter_params(child)}
           %div.controllers
-            %a.open-dialog.ico-doc_lines_stright.sprite-link{"data-id"=>child.id}
-            %a.open-dialog.ico-spechbubble_sq_line.sprite-link{"data-id"=>child.id}              
+            %a.open-protocol-dialog.ico-doc_lines_stright.sprite-link{"data-id"=>child.id}
+            %a.open-comment-dialog.ico-spechbubble_sq_line.sprite-link{"data-id"=>child.id}              
+            = link_to "test", new_commission_protocol_path(child)
           %h5
-            = link_to child.name, uik_path(child)
+            = link_to child.name, commission_path(child)
           .item_holder
             .item
               Явка

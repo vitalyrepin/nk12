@@ -4,24 +4,43 @@
   = link_to "ЦИК", root_path  
   %div.tree-navigation
     %br
-- @commission.children.each do |child|
-  = render :partial => "shared/tree_item", :locals => {:node => child}
+- @commission.subtree.each do |child|
   
-%div#add-report-modal.modal.hide.fade
+  - if !child.is_uik
+    %div.tree-node-holder{id: child.id, "class" => "depth-#{child.depth}"}   
+      %div.node-name
+        %div.name
+          %h3{"id"=>child.id,"data-depth"=>child.depth}
+            = child.name
+            %a.ico-link.sprite-link{:href=>child.url}            
+        .clearfix                        
+      - if child.uik_holder
+        %div.votings{"data-id"=>child.id, "data-loaded"=>"false", "data-url"=>"/commissions/#{child.id}"}  
+          %div.loading
+            = image_tag('ajax-loader.gif')
+            
+
+%div#add-protocol-modal.modal.hide.fade
   .modal-header
     %a.close{:href => "#"} ×
     %h3 Добавить протокол
   .modal-body
-    %p ы
+    =form_tag('/protocols', :method => :post, :class=>"form-stacked ajax", :id=>"add-protocol-form") do
+      .clearfix
+        %label{:for => "fio"} Вас зовут
+        .input
+          %input#comment.span8{:type => "text",:name => "fio", :rows => "5"}
+        %input{:type => "hidden",:name => "commission_id", :value=>"blank"} 
+      = render :partial => "shared/uploader"       
   .modal-footer
-    %a.btn.primary{:href => "#"} Добавить протокол
+    %a.btn.primary.add-comment Добавить протокол
 
 %div#add-comment-modal.modal.hide.fade
   .modal-header
     %a.close{:href => "#"} ×
     %h3 Добавить комментарий
   .modal-body
-    %form#add-comment-form.form-stacked.ajax{:action => "/comments", :method => "POST"}
+    =form_tag('/comments', :method => :post, :class=>"form-stacked ajax", :id=>"add-comment-form") do
       .clearfix
         %label{:for => "fio"} Вас зовут
         .input

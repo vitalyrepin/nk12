@@ -1,6 +1,13 @@
 // Place all the styles related to the home controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.votings{
+	display:block;
+	clear:both;
+}
+.loading{
+	display:none;
+}
 .tree-root{
 
 	margin:5px;
@@ -99,12 +106,19 @@
 		}
 	}		
 }
+@for $i from 0 through 5{
+	.depth-#{$i}{
+		margin-left: $i*10px !important;
+		h3{
+			font-size: 25px-$i*2;
+		}
+	}
+}	
 .node-name{
 	.name{
 		h3{
 
-		}
-		float:left;
+		}		
 	}
 	.root-voting-table{
 		opacity:0;
@@ -121,9 +135,9 @@
 				border-radius:10px;
 			}
 		}
-	}
-
+	}	
 }
+
 .voting-table{
 	width:150px;
 	height:170px;

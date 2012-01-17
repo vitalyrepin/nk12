@@ -8,6 +8,7 @@ class VerifyController < ApplicationController
     end
     @result.uniq!
   end
+  
   def tree_travel(commission)
     sum_result = Hash.new
     commission.children.each do |child|

@@ -4,7 +4,11 @@
     Фильтровать по названию: 
     %input#go-to.xlarge{:name => "search", :size => "30", :type => "text"}  
 %div.row
-  - @commissions.each do |commission|
-    %div.tree-root
-      %h4
-        = link_to "#{commission.name}", :controller => "home", :action => "show", :id => commission.id  
+  - @elections.each do |election|
+    %h2
+      = election.name
+    %div.row
+      - election.commissions.roots.each do |commission|
+        %div.tree-root
+          %h4
+            = link_to "#{commission.name}", :controller => "home", :action => "show", :id => commission.id  
