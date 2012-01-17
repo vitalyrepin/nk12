@@ -11,9 +11,9 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 gem 'jquery-rails'
-if HOST_OS =~ /linux/i
-  gem 'therubyracer', '>= 0.9.8'
-end
+#if HOST_OS =~ /linux/i
+gem 'therubyracer', '>= 0.9.8', :platform => :ruby
+#end
 gem "haml", ">= 3.1.2"
 gem "haml-rails", ">= 0.3.4", :group => :development
 gem "rspec-rails", ">= 2.8.0.rc1", :group => [:development, :test]
@@ -41,7 +41,7 @@ gem "guard-livereload", ">= 0.3.0", :group => :development
 gem "guard-rspec", ">= 0.4.3", :group => :development
 gem "guard-cucumber", ">= 0.6.1", :group => :development
 gem "devise", ">= 1.5.0"
-gem "twitter-bootstrap-rails"
+gem "twitter-bootstrap-rails", :platform => :ruby
 gem "rails-footnotes", ">= 3.7", :group => :development
 
 #Гем для паралельного запуска граббера
