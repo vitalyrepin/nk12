@@ -8,6 +8,28 @@ namespace :grab do
     Commission.destroy_all
   end
 
+  desc "Get ungetted"
+  task :get_lost => :environment do
+        
+    require 'net/http'
+    require 'nokogiri'
+    require 'open-uri'
+    require 'pp'
+
+    @voting_dictionaries = Hash.new
+    Election.first.voting_dictionaries.each do |dict|
+      @voting_dictionaries[dict[:source_identifier]] = dict[:id]
+    end    
+    # Parallel.each(Commission.where(:is_uik => true), :in_threads => 20){|commission| voting_table(commission) if commission.votings.empty? }    
+    Commission.where(:is_uik => true).each do |commission|
+      if commission.votings.empty?
+        print "#{commission.name}\n"
+        print "#{commission.url}\n"
+        # voting_table(commission) 
+      end
+    end
+  end
+
   desc "Grab all the commissions out there from 4-dec elections"
   task :get => :environment do        
     Rake::Task['grab:clean_up'].invoke
@@ -18,10 +40,8 @@ namespace :grab do
     require 'nokogiri'
     require 'open-uri'
     require 'pp'
-    #Собираем то что идет после ЦИК-а (республики/области)
-    
-    
-    
+
+        
     @election = Election.create!(:name => "Выборы депутатов Государственной Думы Федерального Собрания Российской Федерации шестого созыва", :url => "http://www.vybory.izbirkom.ru/region/izbirkom?action=show&root_a=null&vrn=100100028713299&region=0&global=true&type=0&sub_region=0&prver=0&pronetvd=null")
 
     #Хеш имен и их индексов в таблицх голосований (меняется на каждых выборах)
@@ -41,22 +61,20 @@ namespace :grab do
       if (option['value'])      
         commission = Commission.create!(:name => option.content,:url => option['value'], :election_id => @election.id)        
         print "Taken: #{option.content}\n"
-        # get_children(commission,commission.url)        
+        #get_children(commission,commission.url)        
       end
     end
     # commission = Commission.first
     # get_children(commission,commission.url)        
 
 
-    Parallel.each(Commission.all, :in_threads => 20){|commission| get_children(commission,commission.url)}    
+    Parallel.each(Commission.all, :in_threads => 15){|commission| get_children(commission,commission.url)}    
     
     # print "\n-- data taken, taken votes --\n"
             
     # Parallel.each(@election.commissions.where(:is_uik => true), :in_threads => 10){|commission| voting_table(commission)}
 
-    end_time = Time.now
-    print "\nTime elapsed #{(end_time - beginning_time)*1000} milliseconds\n"
-
+    # Parallel.each(Commission.all, :in_threads => /20){|commission| voting_table(commission)}    
   end  
 
 
@@ -76,20 +94,19 @@ namespace :grab do
     #идем по урл, забираем html селект или переходим на сайт субъекта     
     begin
       agent = Nokogiri::HTML(url_normalize(url), nil, 'Windows-1251')
+      
+      agent.search("a").search("a").each do |href|
+        if (href.content.to_str == "Результаты выборов")
+          parent_commission.voting_table_url = href['href']    
+          parent_commission.save          
+        end
+      end
 
       agent.search("select option").each do |option|
         if option['value']
           name = option.content.gsub(/^\d+ /,'')
-          child = parent_commission.children.build(:name => name, :url => option['value'], :is_uik => name.include?("УИК"), :election_id => @election.id)
-                    
-          agent.search("a").search("a").each do |href|
-            if (href.content.to_str == "Результаты выборов")
-              child.voting_table_url = href['href']
-            end
-          end
-
-          child.save
-
+          child = parent_commission.children.create(:name => name, :url => option['value'], :is_uik => name.include?("УИК"), :election_id => @election.id)
+                              
           if name.include?("УИК")
             #ставим флаг, что коммиссия содержит уики
             parent_commission.update_attributes(:uik_holder => true)                                     
@@ -104,13 +121,11 @@ namespace :grab do
             get_children(parent_commission,href['href'])
         end
       end      
-      
+      voting_table(parent_commission)
     rescue Exception => ex
       print "Error: #{ex}\n"
-    end       
-
-    voting_table(parent_commission)  
-
+    end             
+    
   end
   
   def voting_table(commission)    
@@ -131,9 +146,8 @@ namespace :grab do
           end              
         end        
         commission.votes_taken = true            
-
         commission.save                    
-       
+              
        rescue Exception => ex
           print "Error: #{ex}\n"
        end  

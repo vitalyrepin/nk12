@@ -3,10 +3,31 @@ class VerifyController < ApplicationController
   def index
     @result = Array.new
     # commission = Commission.roots.first
-    Commission.roots.each do |commission|
-      commission.children.each {|child| tree_travel(commission)}
-    end
-    @result.uniq!
+    # Commission.roots.each do |commission|
+      # commission.children.each {|child| tree_travel(commission)}
+    # end
+    # @result.uniq!
+
+    # new stuff
+    
+  
+      Commission.where(:uik_holder=>true).each do |uik_holder|        
+        result = 0
+        
+        uik_holder.children.each do |uik_child|
+          if uik_child.votings.exists?
+            result = uik_child.votings.where(:voting_dictionary_id => 1).first.votes + result
+          end
+          # p uik_child.votings
+        end
+        
+        if uik_holder.votings.exists? and uik_holder.votings.where(:voting_dictionary_id => 1).first.votes != result
+          # print "#{uik_holder.name} | #{uik_holder.votings.first.votes} | #{result}\n" 
+          uik_holder[:num_calc] = result
+          @result << uik_holder
+        end
+      end
+    
   end
   
   def tree_travel(commission)

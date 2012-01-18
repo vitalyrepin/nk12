@@ -2,8 +2,21 @@
   - @result.each do |one|
     %tr
       %td
-        = one[:name]
+        %a{:href=>one[:url]}
+          = one[:name]
       %td  
-        = one[:poll]
-      %td  
-        = one[:summed_poll]
+        = one.votings.where(:voting_dictionary_id => 1).first.votes
+      %td 
+        = one[:num_calc]
+        %table 
+          - one.children.each do |child|
+            %tr
+              %td
+                %a{:href=>child.url}
+                  = child.name 
+              
+              %td
+                - if child.votings.exists?
+                  = child.votings.where(:voting_dictionary_id => 1).first.votes
+                - else
+                  NULL
