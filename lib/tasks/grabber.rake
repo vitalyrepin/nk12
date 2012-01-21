@@ -8,9 +8,96 @@ namespace :grab do
     Commission.destroy_all
   end
 
+  desc "Fetch raw HTML data from http://www.vybory.izbirkom.ru and put it on disk"
+  task :fetch_raw_html => :environment do
+    print "*** Fetching the data from http://www.vybory.izbirkom.ru ***\n"
+    require 'net/http'
+    require 'nokogiri'
+    require 'open-uri'
+
+    # Directory to store the raw html files fetched from http://www.vybory.izbirkom.ru
+    inp_data_dir = "./raw_input"
+
+    print "Cleaning the " , inp_data_dir, " directory\n"
+    rm_rf(inp_data_dir)
+
+    start_tm = Time.now
+    fetch_commissions(inp_data_dir, "http://www.vybory.izbirkom.ru/region/izbirkom?action=show&root_a=null&vrn=100100028713299&region=0&global=true&type=0&sub_region=0&prver=0&pronetvd=null")
+    end_tm = Time.now
+
+    def print_tm(tm)
+      print tm.strftime("%d/%m/%y %H:%M:%S"), "; "
+    end
+
+    print "Start time: "
+    print_tm(start_tm)
+
+    print "End time: "
+    print_tm(end_tm)
+
+    print "Total time spent: ", (end_tm - start_tm).to_f, " seconds\n"
+  end
+
+  # Fetches the data from URL url and saves it to the file named fname
+  def fetch_and_save(fname, url)
+    begin
+      raw_html = url_normalize(url)
+    rescue => e
+      print "('", fname, "') Was not able to get URL: \'", url, "\': ", e.message, "\n"
+    end
+
+    File.open(fname, 'w') do |f|
+      f.syswrite(raw_html)
+      f.close
+    end
+    return raw_html
+  end
+
+  # Fetches and stores all the needed data from the commission
+  # Recursivly calls itself to handle sub-commissions
+  def fetch_commissions(dir, url)
+    mkdir(dir)
+
+    # Storing commission's URL in the file system
+    File.open(dir + '/url', 'w') do |f_url|
+      f_url.puts(url)
+    end
+
+    # Storing commission's page in the file system
+    raw_html = fetch_and_save(dir + '/about.html', url)
+    agent = Nokogiri::HTML(raw_html, nil, 'Windows-1251')
+
+    # Search for subcommissions to fetch the data from all of them
+    commissions = {}
+    agent.search("select option").each do |option|
+      if option['value']
+        name = option.content.gsub(/^\d+ /,'')
+        commissions[name.strip] = option['value']
+      end
+    end
+    # Looking for regional commission site
+    agent.search("a").each do |href|
+      if (href.content.to_str == "сайт избирательной комиссии субъекта Российской Федерации")
+      # Commission name = "Regional"
+      commissions['Regional'] = href['href']
+      end
+    end
+
+    # Does the commission page contain a link to the election's results?
+    agent.search("a").search("a").each do |href|
+      if (href.content.to_str == "Результаты выборов")
+        # Fetch the votes page and store in the commission's folder
+        fetch_and_save(dir + '/votes.html', href['href'])
+      end
+    end
+
+    # Starting Parallel fetch for subcommissions
+    Parallel.each(commissions, :in_threads => 64){ |name, url| fetch_commissions(dir + '/' + name, url) }
+  end
+
   desc "Get ungetted"
   task :get_lost => :environment do
-        
+
     require 'net/http'
     require 'nokogiri'
     require 'open-uri'
@@ -89,9 +176,9 @@ namespace :grab do
       url_normalize(url)
     end
   end
-  
+
   def get_children(parent_commission,url)
-    #идем по урл, забираем html селект или переходим на сайт субъекта     
+    #идем по урл, забираем html селект или переходим на сайт субъекта
     begin
       agent = Nokogiri::HTML(url_normalize(url), nil, 'Windows-1251')
       
@@ -153,5 +240,5 @@ namespace :grab do
        end  
     end
   end
-  
+
 end
