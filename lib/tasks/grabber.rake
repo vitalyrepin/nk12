@@ -1,6 +1,9 @@
 # encoding: utf-8
 namespace :grab do
 
+  # Directory to store the raw html files fetched from http://www.vybory.izbirkom.ru
+  inp_data_dir = "./raw_input"
+
   desc "Clean up"
   task :clean_up => :environment  do
     print "*** Чистим все ***\n"
@@ -8,26 +11,30 @@ namespace :grab do
     Commission.destroy_all
   end
 
+  desc "Clean raw html data directory"
+  task :clean_raw_html => :environment do
+    print "*** Cleaning '", inp_data_dir, "' directory\n"
+
+    execute_and_measure_time { rm_rf(inp_data_dir) }
+  end
+
   desc "Fetch raw HTML data from http://www.vybory.izbirkom.ru and put it on disk"
   task :fetch_raw_html => :environment do
-    print "*** Fetching the data from http://www.vybory.izbirkom.ru ***\n"
+    print "*** Fetching the data from http://www.vybory.izbirkom.ru to the directory '", inp_data_dir, "' ***\n"
     require 'net/http'
     require 'nokogiri'
     require 'open-uri'
 
-    # Directory to store the raw html files fetched from http://www.vybory.izbirkom.ru
-    inp_data_dir = "./raw_input"
+    execute_and_measure_time {
+      fetch_commissions(inp_data_dir, "http://www.vybory.izbirkom.ru/region/izbirkom?action=show&root_a=null&vrn=100100028713299&region=0&global=true&type=0&sub_region=0&prver=0&pronetvd=null")
+    }
+  end
 
-    print "Cleaning the " , inp_data_dir, " directory\n"
-    rm_rf(inp_data_dir)
-
+  # Executes block. Measures and prints the execution time in seconds
+  def execute_and_measure_time
     start_tm = Time.now
-    fetch_commissions(inp_data_dir, "http://www.vybory.izbirkom.ru/region/izbirkom?action=show&root_a=null&vrn=100100028713299&region=0&global=true&type=0&sub_region=0&prver=0&pronetvd=null")
+    yield
     end_tm = Time.now
-
-    def print_tm(tm)
-      print tm.strftime("%d/%m/%y %H:%M:%S"), "; "
-    end
 
     print "Start time: "
     print_tm(start_tm)
@@ -38,30 +45,47 @@ namespace :grab do
     print "Total time spent: ", (end_tm - start_tm).to_f, " seconds\n"
   end
 
-  # Fetches the data from URL url and saves it to the file named fname
+  # Prints time in the format DD/MM/YY HH:MM:SS
+  def print_tm(tm)
+      print tm.strftime("%d/%m/%y %H:%M:%S"), "; "
+  end
+
+  # Checks if the file fname exits. If it doesn't fetches the data from URL url and saves it to the file named fname
+  # Returns the contents of the file
   def fetch_and_save(fname, url)
     begin
-      raw_html = url_normalize(url)
+      # Fetching only if the file does not exist or is empty
+      if( (!File.exists?(fname)) || (File.zero?(fname)) )
+        print "Fetching ", fname, "\n"
+        raw_html = url_normalize(url)
+        File.open(fname, 'w') do |f|
+          f.syswrite(raw_html)
+          f.close
+        end
+      else
+        raw_html = File.read(fname)
+      end
     rescue => e
       print "('", fname, "') Was not able to get URL: \'", url, "\': ", e.message, "\n"
     end
 
-    File.open(fname, 'w') do |f|
-      f.syswrite(raw_html)
-      f.close
-    end
     return raw_html
   end
 
   # Fetches and stores all the needed data from the commission
-  # Recursivly calls itself to handle sub-commissions
+  # Recursively calls itself to handle sub-commissions
   def fetch_commissions(dir, url)
-    mkdir(dir)
+    if(!File.exists?(dir))
+      mkdir(dir)
+    end
 
     # Storing commission's URL in the file system
-    File.open(dir + '/url', 'w') do |f_url|
-      f_url.puts(url)
-      f_url.close
+    url_fname = dir + '/url'
+    if( (!File.exists?(url_fname)) || (File.zero?(url_fname)) )
+      File.open(url_fname, 'w') do |f_url|
+        f_url.puts(url)
+        f_url.close
+      end
     end
 
     # Storing commission's page in the file system
@@ -93,7 +117,7 @@ namespace :grab do
     end
 
     # Starting Parallel fetch for subcommissions
-    Parallel.each(commissions, :in_threads => 128){ |name, url| fetch_commissions(dir + '/' + name, url) }
+    Parallel.each(commissions, :in_threads => 8){ |name, url| fetch_commissions(dir + '/' + name, url) }
   end
 
   desc "Get ungetted"
