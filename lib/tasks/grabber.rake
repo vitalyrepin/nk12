@@ -61,6 +61,7 @@ namespace :grab do
     # Storing commission's URL in the file system
     File.open(dir + '/url', 'w') do |f_url|
       f_url.puts(url)
+      f_url.close
     end
 
     # Storing commission's page in the file system
@@ -92,7 +93,7 @@ namespace :grab do
     end
 
     # Starting Parallel fetch for subcommissions
-    Parallel.each(commissions, :in_threads => 64){ |name, url| fetch_commissions(dir + '/' + name, url) }
+    Parallel.each(commissions, :in_threads => 128){ |name, url| fetch_commissions(dir + '/' + name, url) }
   end
 
   desc "Get ungetted"
